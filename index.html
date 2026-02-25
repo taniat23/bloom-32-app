@@ -3,150 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BLOOM 32+ | Control Prenatal</title>
-    <!-- Tailwind para el diseño -->
+    <title>BLOOM 32+ | Dra. Tania Herreras</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Vue 3 para la lógica médica -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
-<body class="bg-slate-50 font-sans selection:bg-rose-100">
+<body class="bg-slate-50 font-sans">
 
 <div id="app" class="min-h-screen pb-24">
-    <!-- HEADER CLÍNICO -->
+    <!-- HEADER -->
     <header class="bg-rose-500 text-white p-6 text-center shadow-lg sticky top-0 z-50">
         <h1 class="text-2xl font-bold tracking-tighter uppercase">BLOOM 32+</h1>
-        <p class="text-[10px] opacity-90 uppercase tracking-[0.2em]">Dr. Especialista | Panamá</p>
+        <p class="text-[10px] opacity-90 uppercase tracking-widest">Dra. Tania Herreras | Panamá</p>
     </header>
 
     <main class="p-4 max-w-md mx-auto">
         
-        <!-- TABS PRINCIPALES -->
+        <!-- TABS -->
         
-        <!-- INICIO / SIGNOS DE ALARMA -->
-        <div v-if="currentTab === 'home'" class="animate-in fade-in duration-500">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-red-100 mb-4">
-                <h2 class="text-red-600 font-bold text-lg mb-3 flex items-center uppercase">
-                    <span class="mr-2">🚨</span> Signos de Alarma
-                </h2>
-                <ul class="text-sm space-y-3 text-slate-700">
-                    <li class="flex items-start"><span class="text-red-400 mr-2">•</span> Sangrado vaginal o salida de líquido.</li>
-                    <li class="flex items-start"><span class="text-red-400 mr-2">•</span> Menos de 10 movimientos en 2 horas.</li>
-                    <li class="flex items-start"><span class="text-red-400 mr-2">•</span> Dolor de cabeza fuerte o lucecitas en la visión.</li>
-                    <li class="flex items-start"><span class="text-red-400 mr-2">•</span> Dolor intenso en la boca del estómago.</li>
+        <!-- INICIO & RED FLAGS -->
+        <div v-if="currentTab === 'home'" class="space-y-4">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-red-100">
+                <h2 class="text-red-600 font-bold text-lg mb-3 uppercase">🚨 Signos de Alarma</h2>
+                <ul class="text-sm space-y-2 text-slate-700">
+                    <li>• Sangrado o salida de líquido.</li>
+                    <li>• Menos de 10 movimientos en 2 horas.</li>
+                    <li>• Dolor de cabeza fuerte o visión borrosa.</li>
                 </ul>
             </div>
             
-            <div class="space-y-3">
-                <a :href="'tel:' + phone" class="block w-full bg-slate-900 text-white p-4 rounded-xl font-bold text-center shadow-lg active:scale-95 transition">
-                    📞 LLAMAR AL CONSULTORIO
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="font-bold text-slate-800 mb-3 uppercase text-xs">Hospitales de Entrega:</h3>
+                <select v-model="selectedHospital" class="w-full p-3 bg-slate-50 border rounded-xl text-sm">
+                    <option value="Pacifica Salud">Pacífica Salud</option>
+                    <option value="The Panama Clinic">The Panama Clinic</option>
+                    <option value="Hospital Nacional">Hospital Nacional</option>
+                </select>
+                <a :href="hospitalLinks[selectedHospital]" target="_blank" class="mt-3 block w-full bg-slate-800 text-white p-3 rounded-xl text-center text-sm font-bold">
+                    📍 IR A {{ selectedHospital.toUpperCase() }}
                 </a>
-                <a :href="waze" target="_blank" class="block w-full bg-white border-2 border-slate-200 text-slate-700 p-4 rounded-xl font-bold text-center active:scale-95 transition">
-                    📍 CÓMO LLEGAR (WAZE)
-                </a>
+            </div>
+
+            <a href="tel:+50700000000" class="block w-full bg-rose-600 text-white p-4 rounded-xl font-bold text-center shadow-lg uppercase">
+                📞 Llamar al Consultorio
+            </a>
+        </div>
+
+        <!-- PLAN DE PARTO (Checkboxes) -->
+        <div v-if="currentTab === 'plan'" class="space-y-4">
+            <div class="bg-white p-6 rounded-2xl shadow-sm">
+                <h2 class="font-bold text-xl mb-4 text-rose-600">Plan de Parto</h2>
+                <div v-for="(item, index) in birthPlanOptions" :key="index" class="flex items-center mb-4">
+                    <input type="checkbox" :id="'opt'+index" class="w-5 h-5 accent-rose-500" v-model="item.checked">
+                    <label :for="'opt'+index" class="ml-3 text-sm text-slate-700">{{ item.text }}</label>
+                </div>
+                <button @click="window.print()" class="w-full bg-slate-100 text-slate-600 p-3 rounded-xl font-bold text-xs uppercase">
+                    🖨️ Imprimir para Admisión
+                </button>
             </div>
         </div>
 
-        <!-- PATADITAS (MÉTODO 1) -->
+        <!-- PATADAS -->
         <div v-if="currentTab === 'kicks'" class="text-center space-y-6">
             <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-                <h2 class="text-xl font-bold text-slate-800">Conteo de Movimientos</h2>
-                <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Meta: 10 movimientos</p>
-                
-                <div class="my-8 text-7xl font-black text-rose-500 tabular-nums">{{ kicks }}</div>
-                
-                <button @click="addKick" 
-                    class="w-32 h-32 bg-rose-500 text-white rounded-full text-xl font-bold shadow-xl shadow-rose-200 active:scale-90 transition-all border-[8px] border-rose-50">
-                    PATEÓ
-                </button>
-                
-                <div class="mt-8 flex justify-between text-[10px] font-bold text-slate-400 uppercase border-t pt-4">
-                    <span>Inicio: {{ startTime || '--:--' }}</span>
-                    <span>Transcurrido: {{ elapsedTime }}</span>
-                </div>
-                <button @click="resetKicks" class="mt-4 text-[10px] text-slate-300 underline uppercase tracking-widest">Reiniciar</button>
+                <h2 class="text-xl font-bold">Conteo de Movimientos</h2>
+                <div class="my-8 text-7xl font-black text-rose-500">{{ kicks }}</div>
+                <button @click="addKick" class="w-32 h-32 bg-rose-500 text-white rounded-full text-xl font-bold shadow-xl active:scale-90 transition-all border-8 border-rose-50">PATEÓ</button>
+                <button @click="resetKicks" class="mt-8 block w-full text-[10px] text-slate-300 underline uppercase">Reiniciar</button>
             </div>
         </div>
 
-        <!-- PARTO (5-1-1) -->
-        <div v-if="currentTab === 'labor'" class="space-y-4">
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 text-center">
-                <h2 class="font-bold text-xl mb-6">Cronómetro de Contracciones</h2>
-                
-                <div v-if="alert511" class="mb-4 p-4 bg-orange-50 border border-orange-200 text-orange-700 rounded-xl text-xs font-bold animate-pulse">
-                    ⚠️ REGLA 5-1-1: Contracciones cada 5 min. Considere ir al hospital.
-                </div>
-
-                <button @click="toggleTimer" 
-                    :class="isTiming ? 'bg-red-500 shadow-red-100' : 'bg-slate-800 shadow-slate-200'"
-                    class="w-full py-8 text-white rounded-2xl text-2xl font-black shadow-xl transition-all active:scale-95">
-                    {{ isTiming ? 'TERMINÓ' : 'INICIÓ' }}
-                </button>
-                
-                <div class="mt-6 space-y-2">
-                    <div v-for="(c, i) in history" :key="i" class="flex justify-between text-[11px] p-3 bg-slate-50 rounded-lg font-medium text-slate-600">
-                        <span>{{ c.start }}</span>
-                        <span v-if="c.duration" class="bg-slate-200 px-2 rounded">{{ c.duration }} seg</span>
-                    </div>
-                </div>
+        <!-- EJERCICIOS -->
+        <div v-if="currentTab === 'gym'" class="space-y-4">
+            <h2 class="font-bold text-xl text-slate-800">Ejercicios 32+ Semanas</h2>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="font-bold text-rose-500 text-sm">1. Pelvic Tilts (Cat-Cow)</h3>
+                <p class="text-xs text-slate-500 mt-1">Para aliviar dolor de espalda y posicionar al bebé.</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="font-bold text-rose-500 text-sm">2. Sentadilla Profunda (Malasana)</h3>
+                <p class="text-xs text-slate-500 mt-1">Para abrir la pelvis y preparar el canal de parto.</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="font-bold text-rose-500 text-sm">3. Estiramiento Anti-Tranque</h3>
+                <p class="text-xs text-slate-500 mt-1">Hombros y cuello para el tráfico de Panamá.</p>
             </div>
         </div>
 
     </main>
 
-    <!-- NAVEGACIÓN INFERIOR -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-slate-100 flex justify-around p-4 shadow-2xl z-50">
-        <button @click="currentTab = 'home'" :class="currentTab === 'home' ? 'text-rose-500' : 'text-slate-300'" class="flex flex-col items-center transition-colors">
-            <span class="text-[10px] font-black uppercase tracking-tighter">Inicio</span>
-        </button>
-        <button @click="currentTab = 'kicks'" :class="currentTab === 'kicks' ? 'text-rose-500' : 'text-slate-300'" class="flex flex-col items-center transition-colors">
-            <span class="text-[10px] font-black uppercase tracking-tighter">Patadas</span>
-        </button>
-        <button @click="currentTab = 'labor'" :class="currentTab === 'labor' ? 'text-rose-500' : 'text-slate-300'" class="flex flex-col items-center transition-colors">
-            <span class="text-[10px] font-black uppercase tracking-tighter">Parto</span>
-        </button>
+    <!-- NAV -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-4 shadow-2xl z-50">
+        <button @click="currentTab = 'home'" :class="currentTab === 'home' ? 'text-rose-500' : 'text-slate-300'"><span class="text-[10px] font-bold uppercase">Inicio</span></button>
+        <button @click="currentTab = 'plan'" :class="currentTab === 'plan' ? 'text-rose-500' : 'text-slate-300'"><span class="text-[10px] font-bold uppercase">Plan</span></button>
+        <button @click="currentTab = 'kicks'" :class="currentTab === 'kicks' ? 'text-rose-500' : 'text-slate-300'"><span class="text-[10px] font-bold uppercase">Patadas</span></button>
+        <button @click="currentTab = 'gym'" :class="currentTab === 'gym' ? 'text-rose-500' : 'text-slate-300'"><span class="text-[10px] font-bold uppercase">Gimnasio</span></button>
     </nav>
 </div>
 
 <script>
-    const { createApp, ref, computed, onMounted } = Vue;
-
+    const { createApp, ref } = Vue;
     createApp({
         setup() {
             const currentTab = ref('home');
-            const phone = ref("+50700000000"); // Se puede cambiar aquí
-            const waze = ref("https://waze.com/ul?q=Pacifica+Salud");
-
-            // LÓGICA DE PATADAS
             const kicks = ref(0);
-            const startTime = ref(null);
-            const elapsedTime = ref("0m");
-
-            const addKick = () => {
-                if (kicks.value === 0) startTime.value = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                if (kicks.value < 10) kicks.value++;
-            };
-            const resetKicks = () => { kicks.value = 0; startTime.value = null; };
-
-            // LÓGICA DE CONTRACCIONES
-            const isTiming = ref(false);
-            const history = ref([]);
-            let lastStart = null;
-
-            const toggleTimer = () => {
-                const now = new Date();
-                if (!isTiming.value) {
-                    lastStart = now;
-                    history.value.unshift({ start: now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'}), raw: now });
-                } else {
-                    const duration = Math.floor((now - lastStart) / 1000);
-                    history.value[0].duration = duration;
-                }
-                isTiming.value = !isTiming.value;
+            const selectedHospital = ref('Pacifica Salud');
+            
+            const hospitalLinks = {
+                'Pacifica Salud': 'https://waze.com/ul?q=Pacifica+Salud',
+                'The Panama Clinic': 'https://waze.com/ul?q=The+Panama+Clinic',
+                'Hospital Nacional': 'https://waze.com/ul?q=Hospital+Nacional'
             };
 
-            const alert511 = computed(() => history.value.length >= 3);
+            const birthPlanOptions = ref([
+                { text: 'Contacto piel con piel inmediato', checked: true },
+                { text: 'Corte tardío del cordón umbilical', checked: true },
+                { text: 'Lactancia materna exclusiva', checked: false },
+                { text: 'Deseo usar pelota de parto', checked: false },
+                { text: 'Ambiente con luz tenue y música', checked: false }
+            ]);
 
-            return { currentTab, phone, waze, kicks, startTime, elapsedTime, addKick, resetKicks, isTiming, history, toggleTimer, alert511 };
+            const addKick = () => { if (kicks.value < 10) kicks.value++; };
+            const resetKicks = () => { kicks.value = 0; };
+
+            return { currentTab, kicks, selectedHospital, hospitalLinks, birthPlanOptions, addKick, resetKicks };
         }
     }).mount('#app');
 </script>
