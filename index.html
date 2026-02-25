@@ -9,7 +9,7 @@
 </head>
 <body class="bg-slate-50 font-sans">
 
-<div id="app" class="min-h-screen pb-24">
+<div id="app" class="min-h-screen pb-24 text-slate-900">
     <!-- HEADER -->
     <header class="bg-rose-500 text-white p-6 text-center shadow-lg sticky top-0 z-50">
         <h1 class="text-2xl font-bold tracking-tighter uppercase">BLOOM 32+</h1>
@@ -21,7 +21,7 @@
         <!-- INICIO & RED FLAGS -->
         <div v-if="currentTab === 'home'" class="space-y-4">
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-red-100">
-                <h2 class="text-red-600 font-bold text-lg mb-3 uppercase text-center">🚨 Signos de Alarma</h2>
+                <h2 class="text-red-600 font-bold text-lg mb-3 uppercase text-center italic">🚨 Signos de Alarma</h2>
                 <ul class="text-sm space-y-2 text-slate-700">
                     <li>• Sangrado vaginal o salida de líquido.</li>
                     <li>• Menos de 10 movimientos en 2 horas.</li>
@@ -31,31 +31,31 @@
             </div>
             
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-                <h3 class="font-bold text-slate-800 mb-3 uppercase text-[10px]">Mi Hospital de Entrega:</h3>
+                <h3 class="font-bold text-slate-800 mb-2 uppercase text-[10px]">Hospital de Entrega:</h3>
                 <select v-model="selectedHospital" class="w-full p-3 bg-slate-50 border rounded-xl text-sm mb-3">
                     <option value="Pacifica Salud">Pacífica Salud</option>
                     <option value="The Panama Clinic">The Panama Clinic</option>
                     <option value="Hospital Nacional">Hospital Nacional</option>
                 </select>
-                <a :href="hospitalLinks[selectedHospital]" target="_blank" class="block w-full bg-slate-800 text-white p-3 rounded-xl text-center text-xs font-bold shadow-md">
-                    📍 VER RUTA A {{ selectedHospital.toUpperCase() }}
-                </a>
+                <button @click="openLink(hospitalLinks[selectedHospital])" class="w-full bg-slate-800 text-white p-3 rounded-xl text-center text-xs font-bold uppercase shadow-md">
+                    📍 Ver Ruta en Waze
+                </button>
             </div>
 
-            <a href="tel:+50700000000" class="block w-full bg-rose-600 text-white p-4 rounded-xl font-bold text-center shadow-lg uppercase text-sm">
+            <button @click="openLink('tel:+50700000000')" class="w-full bg-rose-600 text-white p-4 rounded-xl font-bold text-center shadow-lg uppercase text-sm">
                 📞 Llamar al Consultorio
-            </a>
+            </button>
         </div>
 
         <!-- PLAN DE PARTO -->
         <div v-if="currentTab === 'plan'" class="space-y-4">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <h2 class="font-bold text-xl mb-4 text-rose-600">Plan de Parto</h2>
-                <div v-for="(item, index) in birthPlanOptions" :key="index" class="flex items-center mb-4">
-                    <input type="checkbox" :id="'opt'+index" class="w-6 h-6 accent-rose-500 rounded" v-model="item.checked">
-                    <label :for="'opt'+index" class="ml-3 text-sm text-slate-700 leading-tight">{{ item.text }}</label>
+                <div v-for="(item, index) in birthPlanOptions" :key="index" class="flex items-center mb-5">
+                    <input type="checkbox" :id="'opt'+index" class="w-6 h-6 accent-rose-500 rounded border-slate-300" v-model="item.checked">
+                    <label :for="'opt'+index" class="ml-4 text-sm text-slate-700 leading-snug">{{ item.text }}</label>
                 </div>
-                <button onclick="window.print()" class="w-full bg-slate-100 text-slate-500 p-3 rounded-xl font-bold text-[10px] uppercase border border-slate-200">
+                <button onclick="window.print()" class="w-full mt-4 bg-slate-50 text-slate-500 p-3 rounded-xl font-bold text-[10px] uppercase border border-slate-200">
                     🖨️ Imprimir para Admisión
                 </button>
             </div>
@@ -66,33 +66,35 @@
             <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
                 <h2 class="text-xl font-bold text-slate-800">Conteo de Movimientos</h2>
                 <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Método 1: Meta 10</p>
-                <div class="my-8 text-7xl font-black text-rose-500 tabular-nums">{{ kicks }}</div>
-                <button @click="addKick" class="w-32 h-32 bg-rose-500 text-white rounded-full text-xl font-bold shadow-xl active:scale-90 transition-all border-8 border-rose-50">PATEÓ</button>
-                <button @click="resetKicks" class="mt-8 block w-full text-[10px] text-slate-300 underline uppercase">Reiniciar sesión</button>
+                <div class="my-10 text-8xl font-black text-rose-500 tabular-nums">{{ kicks }}</div>
+                <button @click="addKick" class="w-36 h-36 bg-rose-500 text-white rounded-full text-2xl font-bold shadow-xl active:scale-90 transition-all border-8 border-rose-50">PATEÓ</button>
+                <button @click="resetKicks" class="mt-10 block w-full text-[10px] text-slate-300 underline uppercase tracking-widest">Reiniciar</button>
             </div>
         </div>
 
-        <!-- GIMNASIO CON LINKS CORREGIDOS -->
+        <!-- GIMNASIO (FIXED) -->
         <div v-if="currentTab === 'gym'" class="space-y-4">
             <h2 class="font-bold text-xl text-slate-800 mb-2">Gimnasio Prenatal 32+</h2>
             
-            <div v-for="(ex, i) in exercises" :key="i" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 space-y-3">
-                <h3 class="font-bold text-rose-500 text-base">{{ ex.title }}</h3>
-                <p class="text-xs text-slate-500 leading-relaxed">{{ ex.desc }}</p>
-                <a :href="ex.video" target="_blank" class="inline-flex items-center text-xs font-bold text-blue-600 bg-blue-50 px-4 py-2 rounded-lg hover:bg-blue-100 transition">
-                    ▶️ VER VIDEO EN YOUTUBE
-                </a>
+            <div v-for="(ex, i) in exercises" :key="i" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                <div>
+                    <h3 class="font-bold text-rose-500 text-base leading-tight">{{ ex.title }}</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed mt-1">{{ ex.desc }}</p>
+                </div>
+                <button @click="openLink(ex.video)" class="w-full flex justify-center items-center text-xs font-bold text-blue-600 bg-blue-50 py-4 rounded-xl active:bg-blue-100 border border-blue-100 uppercase">
+                    ▶️ Abrir Video en YouTube
+                </button>
             </div>
         </div>
 
     </main>
 
-    <!-- NAVEGACIÓN -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t flex justify-around p-4 shadow-2xl z-50">
-        <button @click="currentTab = 'home'" :class="currentTab === 'home' ? 'text-rose-500' : 'text-slate-300'"><span class="text-[10px] font-black uppercase">Inicio</span></button>
-        <button @click="currentTab = 'plan'" :class="currentTab === 'plan' ? 'text-rose-500' : 'text-slate-300'"><span class="text-[10px] font-black uppercase">Plan</span></button>
-        <button @click="currentTab = 'kicks'" :class="currentTab === 'kicks' ? 'text-rose-500' : 'text-slate-300'"><span class="text-[10px] font-black uppercase">Patadas</span></button>
-        <button @click="currentTab = 'gym'" :class="currentTab === 'gym' ? 'text-rose-500' : 'text-slate-300'"><span class="text-[10px] font-black uppercase">Gimnasio</span></button>
+    <!-- NAV -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t flex justify-around p-4 shadow-2xl z-50">
+        <button v-for="tab in ['home', 'plan', 'kicks', 'gym']" @click="currentTab = tab" 
+            :class="currentTab === tab ? 'text-rose-500' : 'text-slate-300'" class="flex flex-col items-center transition-all">
+            <span class="text-[10px] font-black uppercase">{{ tab === 'gym' ? 'Gimnasio' : tab === 'kicks' ? 'Patadas' : tab === 'plan' ? 'Plan' : 'Inicio' }}</span>
+        </button>
     </nav>
 </div>
 
@@ -113,18 +115,18 @@
             const exercises = [
                 { 
                     title: '1. Pelvic Tilts (Cat-Cow)', 
-                    desc: 'Excelente para aliviar el dolor lumbar y ayudar al bebé a encontrar la posición óptima.',
-                    video: 'https://www.youtube.com/watch?v=li0pE7YvT7I' 
+                    desc: 'Alivia dolor lumbar y posiciona al bebé.',
+                    video: 'https://youtu.be/li0pE7YvT7I' 
                 },
                 { 
-                    title: '2. Sentadilla Profunda', 
-                    desc: 'Ayuda a abrir la pelvis y relajar el suelo pélvico. Use una silla para apoyo.',
-                    video: 'https://www.youtube.com/watch?v=1F_X4uXF6-Y' 
+                    title: '2. Sentadilla (Apertura)', 
+                    desc: 'Prepara el canal de parto. Use apoyo si es necesario.',
+                    video: 'https://youtu.be/1F_X4uXF6-Y' 
                 },
                 { 
                     title: '3. Estiramiento Anti-Tranque', 
-                    desc: 'Movilidad de cuello y hombros para liberar la tensión durante el tráfico de Panamá.',
-                    video: 'https://www.youtube.com/watch?v=F0S12v6iLSI' 
+                    desc: 'Libera hombros y cuello durante el tráfico.',
+                    video: 'https://youtu.be/F0S12v6iLSI' 
                 }
             ];
 
@@ -132,14 +134,19 @@
                 { text: 'Contacto piel con piel (Golden Hour)', checked: true },
                 { text: 'Corte tardío del cordón umbilical', checked: true },
                 { text: 'Lactancia materna exclusiva', checked: false },
-                { text: 'Libertad de movimiento durante el labor', checked: true },
+                { text: 'Libertad de movimiento durante labor', checked: true },
                 { text: 'No ofrecer fórmulas ni chupones', checked: true }
             ]);
 
             const addKick = () => { if (kicks.value < 10) kicks.value++; };
             const resetKicks = () => { kicks.value = 0; };
+            
+            // FUNCIÓN CLAVE: Fuerza la apertura fuera de la App
+            const openLink = (url) => {
+                window.open(url, '_system');
+            };
 
-            return { currentTab, kicks, selectedHospital, hospitalLinks, birthPlanOptions, exercises, addKick, resetKicks };
+            return { currentTab, kicks, selectedHospital, hospitalLinks, birthPlanOptions, exercises, addKick, resetKicks, openLink };
         }
     }).mount('#app');
 </script>
