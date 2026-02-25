@@ -13,15 +13,15 @@
     <!-- HEADER -->
     <header class="bg-rose-500 text-white p-6 text-center shadow-lg sticky top-0 z-50">
         <h1 class="text-2xl font-bold tracking-tighter uppercase">BLOOM 32+</h1>
-        <p class="text-[10px] opacity-95 uppercase tracking-widest">Dra. Tania Herrera | Panamá</p>
+        <p class="text-[10px] opacity-95 uppercase tracking-widest italic">Dra. Tania Herrera | Panamá</p>
     </header>
 
     <main class="p-4 max-w-md mx-auto">
         
-        <!-- INICIO & SIGNOS DE ALARMA -->
+        <!-- INICIO & ALARMAS -->
         <div v-if="currentTab === 'home'" class="space-y-4 animate-in fade-in">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-red-100">
-                <h2 class="text-red-600 font-bold text-lg mb-3 uppercase text-center italic">🚨 Signos de Alarma</h2>
+            <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-red-500">
+                <h2 class="text-red-600 font-bold text-lg mb-2 uppercase italic text-center">🚨 Signos de Alarma</h2>
                 <ul class="text-sm space-y-2 text-slate-700">
                     <li>• Sangrado vaginal o salida de líquido.</li>
                     <li>• Menos de 10 movimientos en 2 horas.</li>
@@ -32,86 +32,72 @@
             
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
                 <h3 class="font-bold text-slate-800 mb-2 uppercase text-[10px]">Hospital de Entrega:</h3>
-                <select v-model="selectedHospital" class="w-full p-3 bg-slate-50 border rounded-xl text-sm mb-3 focus:ring-2 focus:ring-rose-200 outline-none">
+                <select v-model="selectedHospital" class="w-full p-3 bg-slate-50 border rounded-xl text-sm mb-3 outline-none focus:ring-2 focus:ring-rose-200">
                     <option value="Pacifica Salud">Pacífica Salud</option>
                     <option value="The Panama Clinic">The Panama Clinic</option>
                     <option value="Hospital Nacional">Hospital Nacional</option>
                 </select>
-                <a :href="hospitalLinks[selectedHospital]" target="_blank" class="block w-full bg-slate-800 text-white p-3 rounded-xl text-center text-xs font-bold uppercase shadow-md active:bg-slate-700">
-                    📍 Ver Ruta en Waze
+                <a :href="hospitalLinks[selectedHospital]" target="_blank" class="block w-full bg-slate-800 text-white p-4 rounded-xl text-center text-xs font-bold uppercase shadow-md active:bg-slate-700 transition">
+                    📍 Ruta Directa (Waze)
                 </a>
             </div>
 
-            <a href="tel:+50700000000" class="block w-full bg-rose-600 text-white p-4 rounded-xl font-bold text-center shadow-lg uppercase text-sm active:bg-rose-700">
+            <a href="tel:+50700000000" class="block w-full bg-rose-600 text-white p-5 rounded-2xl font-bold text-center shadow-lg uppercase text-sm active:bg-rose-700 transition">
                 📞 Llamar al Consultorio
             </a>
         </div>
 
-        <!-- PLAN DE PARTO (Checkboxes) -->
+        <!-- PLAN DE PARTO -->
         <div v-if="currentTab === 'plan'" class="space-y-4">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <h2 class="font-bold text-xl mb-2 text-rose-600">Plan de Parto</h2>
-                <p class="text-[10px] text-slate-400 mb-6 uppercase tracking-widest">Preferencias para el hospital:</p>
+                <p class="text-[10px] text-slate-400 mb-6 uppercase tracking-widest">Sus preferencias para admisión:</p>
                 <div v-for="(item, index) in birthPlanOptions" :key="index" class="flex items-center mb-5">
-                    <input type="checkbox" :id="'opt'+index" class="w-6 h-6 accent-rose-500 rounded border-slate-300" v-model="item.checked">
+                    <input type="checkbox" :id="'opt'+index" class="w-6 h-6 accent-rose-500 rounded" v-model="item.checked">
                     <label :for="'opt'+index" class="ml-4 text-sm text-slate-700 leading-snug">{{ item.text }}</label>
                 </div>
                 <button onclick="window.print()" class="w-full mt-4 bg-slate-50 text-slate-500 p-3 rounded-xl font-bold text-[10px] uppercase border border-slate-200 active:bg-slate-100">
-                    🖨️ Imprimir para Admisión
+                    🖨️ Generar PDF / Imprimir
                 </button>
             </div>
         </div>
 
-        <!-- PATADITAS (MÉTODO 1) -->
+        <!-- PATADITAS -->
         <div v-if="currentTab === 'kicks'" class="text-center space-y-6">
             <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-                <h2 class="text-xl font-bold text-slate-800 tracking-tight">Movimientos Fetales</h2>
-                <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Meta: 10 movimientos</p>
+                <h2 class="text-xl font-bold text-slate-800">Control de Movimientos</h2>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Meta: 10 movimientos en 2h</p>
                 <div class="my-10 text-8xl font-black text-rose-500 tabular-nums tracking-tighter">{{ kicks }}</div>
-                <button @click="addKick" class="w-36 h-36 bg-rose-500 text-white rounded-full text-2xl font-bold shadow-2xl shadow-rose-200 active:scale-90 transition-all border-8 border-rose-50">PATEÓ</button>
+                <button @click="addKick" class="w-36 h-36 bg-rose-500 text-white rounded-full text-2xl font-bold shadow-2xl shadow-rose-200 active:scale-90 transition-all border-8 border-rose-50">REGISTRAR</button>
                 <button @click="resetKicks" class="mt-10 block w-full text-[10px] text-slate-300 underline uppercase tracking-widest">Reiniciar sesión</button>
             </div>
         </div>
 
-        <!-- GIMNASIO (Solución Definitiva con Enlaces Externos) -->
+        <!-- GIMNASIO (SOLUCIÓN VIMEO - MÁS ESTABLE) -->
         <div v-if="currentTab === 'gym'" class="space-y-4">
             <h2 class="font-bold text-xl text-slate-800 mb-4 px-2">Gimnasio Prenatal 32+</h2>
             
-            <div v-for="(ex, i) in exercises" :key="i" class="bg-white overflow-hidden rounded-2xl shadow-sm border border-slate-100 transition active:bg-slate-50">
-                <a :href="ex.video" target="_blank" rel="noopener noreferrer" class="block p-5">
-                    <div class="flex justify-between items-center">
-                        <div class="pr-4">
-                            <h3 class="font-bold text-rose-500 text-base leading-tight">{{ ex.title }}</h3>
-                            <p class="text-xs text-slate-500 mt-2 leading-relaxed">{{ ex.desc }}</p>
-                            <span class="inline-block mt-3 text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-tighter">
-                                ▶️ Tocar para abrir video
-                            </span>
-                        </div>
-                        <div class="flex-shrink-0 w-12 h-12 bg-rose-50 rounded-full flex items-center justify-center">
-                            <span class="text-rose-400">➔</span>
-                        </div>
-                    </div>
-                </a>
+            <div v-for="(ex, i) in exercises" :key="i" class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="p-5">
+                    <h3 class="font-bold text-rose-500 text-base leading-tight">{{ ex.title }}</h3>
+                    <p class="text-xs text-slate-500 mt-2 mb-4 leading-relaxed">{{ ex.desc }}</p>
+                    <a :href="ex.video" target="_blank" class="w-full flex justify-center items-center text-[10px] font-black text-blue-600 bg-blue-50 py-4 rounded-xl border border-blue-100 uppercase tracking-widest active:bg-blue-100">
+                        🎬 Abrir Video (Vimeo)
+                    </a>
+                </div>
             </div>
             
-            <p class="text-[10px] text-slate-400 text-center p-4 uppercase italic">Los videos se abrirán externamente en YouTube por seguridad.</p>
+            <div class="mt-6 p-4 bg-slate-200/50 rounded-xl text-center">
+                <p class="text-[9px] text-slate-500 uppercase font-bold">Videos alojados en servidores externos para garantizar reproducción fluida en Panamá.</p>
+            </div>
         </div>
 
     </main>
 
-    <!-- NAVEGACIÓN INFERIOR -->
+    <!-- NAVBAR -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 flex justify-around p-4 shadow-2xl z-50">
-        <button @click="currentTab = 'home'" :class="currentTab === 'home' ? 'text-rose-500 font-black' : 'text-slate-300 font-bold'" class="flex flex-col items-center">
-            <span class="text-[10px] uppercase tracking-tighter italic">Inicio</span>
-        </button>
-        <button @click="currentTab = 'plan'" :class="currentTab === 'plan' ? 'text-rose-500 font-black' : 'text-slate-300 font-bold'" class="flex flex-col items-center">
-            <span class="text-[10px] uppercase tracking-tighter italic">Plan</span>
-        </button>
-        <button @click="currentTab = 'kicks'" :class="currentTab === 'kicks' ? 'text-rose-500 font-black' : 'text-slate-300 font-bold'" class="flex flex-col items-center">
-            <span class="text-[10px] uppercase tracking-tighter italic">Patadas</span>
-        </button>
-        <button @click="currentTab = 'gym'" :class="currentTab === 'gym' ? 'text-rose-500 font-black' : 'text-slate-300 font-bold'" class="flex flex-col items-center">
-            <span class="text-[10px] uppercase tracking-tighter italic">Gimnasio</span>
+        <button v-for="tab in tabs" @click="currentTab = tab.id" :class="currentTab === tab.id ? 'text-rose-500 font-black' : 'text-slate-300 font-bold'" class="flex flex-col items-center">
+            <span class="text-[10px] uppercase tracking-tighter italic">{{ tab.name }}</span>
         </button>
     </nav>
 </div>
@@ -124,6 +110,13 @@
             const kicks = ref(0);
             const selectedHospital = ref('Pacifica Salud');
             
+            const tabs = [
+                { id: 'home', name: 'Inicio' },
+                { id: 'plan', name: 'Plan' },
+                { id: 'kicks', name: 'Patadas' },
+                { id: 'gym', name: 'Gimnasio' }
+            ];
+
             const hospitalLinks = {
                 'Pacifica Salud': 'https://waze.com/ul?q=Pacifica+Salud',
                 'The Panama Clinic': 'https://waze.com/ul?q=The+Panama+Clinic',
@@ -133,33 +126,33 @@
             const exercises = [
                 { 
                     title: '1. Pelvic Tilts (Cat-Cow)', 
-                    desc: 'Alivia el dolor lumbar y ayuda al bebé a acomodarse. Realizar 10 repeticiones lentas.',
-                    video: 'https://www.youtube.com/watch?v=li0pE7YvT7I' 
+                    desc: 'Movimiento fundamental para aliviar la espalda y mejorar la postura del bebé.',
+                    video: 'https://vimeo.com/225434434' 
                 },
                 { 
-                    title: '2. Sentadilla (Apertura)', 
-                    desc: 'Prepara el canal de parto. Use una silla o la pared como apoyo para el equilibrio.',
-                    video: 'https://www.youtube.com/watch?v=1F_X4uXF6-Y' 
+                    title: '2. Sentadilla Prenatal', 
+                    desc: 'Fortalece las piernas y prepara la pelvis para el descenso fetal.',
+                    video: 'https://vimeo.com/393144893' 
                 },
                 { 
-                    title: '3. Estiramiento Anti-Tranque', 
-                    desc: 'Libera hombros y cuello durante el tráfico. Ideal para mejorar la postura cervical.',
-                    video: 'https://www.youtube.com/watch?v=F0S12v6iLSI' 
+                    title: '3. Movilidad de Hombros', 
+                    desc: 'Ideal para liberar la tensión del cuello tras el tráfico en la ciudad.',
+                    video: 'https://vimeo.com/256947477' 
                 }
             ];
 
             const birthPlanOptions = ref([
-                { text: 'Contacto piel con piel (Golden Hour)', checked: true },
+                { text: 'Contacto piel con piel inmediato', checked: true },
                 { text: 'Corte tardío del cordón umbilical', checked: true },
                 { text: 'Lactancia materna exclusiva', checked: false },
-                { text: 'Deseo libertad de movimiento durante labor', checked: true },
+                { text: 'Libertad de movimiento en labor', checked: true },
                 { text: 'No ofrecer fórmulas ni chupones', checked: true }
             ]);
 
             const addKick = () => { if (kicks.value < 10) kicks.value++; };
             const resetKicks = () => { kicks.value = 0; };
 
-            return { currentTab, kicks, selectedHospital, hospitalLinks, birthPlanOptions, exercises, addKick, resetKicks };
+            return { currentTab, kicks, selectedHospital, hospitalLinks, birthPlanOptions, exercises, tabs, addKick, resetKicks };
         }
     }).mount('#app');
 </script>
