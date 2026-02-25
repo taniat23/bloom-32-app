@@ -10,10 +10,9 @@
 <body class="bg-slate-50 font-sans text-slate-900">
 
 <div id="app" class="min-h-screen pb-24">
-    <!-- HEADER -->
     <header class="bg-rose-500 text-white p-6 text-center shadow-lg sticky top-0 z-50">
         <h1 class="text-2xl font-bold tracking-tighter uppercase">BLOOM 32+</h1>
-        <p class="text-[10px] opacity-95 uppercase tracking-widest italic">Dra. Tania Herrera | Panamá</p>
+        <p class="text-[10px] opacity-95 uppercase tracking-widest italic text-white">Dra. Tania Herrera | Panamá</p>
     </header>
 
     <main class="p-4 max-w-md mx-auto">
@@ -21,7 +20,7 @@
         <!-- INICIO & ALARMAS -->
         <div v-if="currentTab === 'home'" class="space-y-4">
             <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-red-500">
-                <h2 class="text-red-600 font-bold text-lg mb-2 uppercase italic text-center">🚨 Signos de Alarma</h2>
+                <h2 class="text-red-600 font-bold text-lg mb-2 uppercase italic text-center text-red-600">🚨 Signos de Alarma</h2>
                 <ul class="text-sm space-y-2 text-slate-700">
                     <li>• Sangrado vaginal o salida de líquido.</li>
                     <li>• Menos de 10 movimientos en 2 horas.</li>
@@ -32,48 +31,87 @@
             
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
                 <h3 class="font-bold text-slate-800 mb-2 uppercase text-[10px]">Hospital de Entrega:</h3>
-                <select v-model="selectedHospital" class="w-full p-3 bg-slate-50 border rounded-xl text-sm mb-3 outline-none focus:ring-2 focus:ring-rose-200">
+                <select v-model="selectedHospital" class="w-full p-3 bg-slate-50 border rounded-xl text-sm mb-3 outline-none">
                     <option value="Pacifica Salud">Pacífica Salud</option>
                     <option value="The Panama Clinic">The Panama Clinic</option>
                     <option value="Hospital Nacional">Hospital Nacional</option>
                 </select>
-                <a :href="hospitalLinks[selectedHospital]" target="_blank" class="block w-full bg-slate-800 text-white p-4 rounded-xl text-center text-xs font-bold uppercase shadow-md active:bg-slate-700 transition">
+                <a :href="hospitalLinks[selectedHospital]" target="_blank" class="block w-full bg-slate-800 text-white p-4 rounded-xl text-center text-xs font-bold uppercase shadow-md">
                     📍 Ruta Directa (Waze)
                 </a>
             </div>
 
-            <a href="tel:+50700000000" class="block w-full bg-rose-600 text-white p-5 rounded-2xl font-bold text-center shadow-lg uppercase text-sm active:bg-rose-700 transition">
+            <a href="tel:+50700000000" class="block w-full bg-rose-600 text-white p-5 rounded-2xl font-bold text-center shadow-lg uppercase text-sm">
                 📞 Llamar al Consultorio
             </a>
         </div>
 
-        <!-- PLAN DE PARTO -->
+        <!-- GIMNASIO (VIDEO PROPIO) -->
+        <div v-if="currentTab === 'gym'" class="space-y-6">
+            <h2 class="font-bold text-xl text-slate-800 mb-4 px-2 uppercase">Gimnasio Dra. Tania Herrera</h2>
+            
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                <!-- REPRODUCTOR NATIVO QUE LEE EL ARCHIVO QUE SUBIÓ -->
+                <video controls class="w-full bg-black aspect-video" playsinline preload="metadata">
+                    <source src="cat-cow.mp4" type="video/mp4">
+                    Tu celular no soporta este video.
+                </video>
+                <div class="p-5">
+                    <h3 class="font-bold text-rose-500 text-base leading-tight uppercase">1. Pelvic Tilts (Cat-Cow)</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">Siga el ritmo del video para aliviar la espalda y posicionar al bebé.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PLAN DE PARTO (RESUMIDO) -->
         <div v-if="currentTab === 'plan'" class="space-y-4">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <h2 class="font-bold text-xl mb-2 text-rose-600 uppercase">Plan de Parto</h2>
+                <h2 class="font-bold text-xl mb-4 text-rose-600 uppercase">Plan de Parto</h2>
                 <div v-for="(item, index) in birthPlanOptions" :key="index" class="flex items-center mb-5">
                     <input type="checkbox" :id="'opt'+index" class="w-6 h-6 accent-rose-500 rounded" v-model="item.checked">
-                    <label :for="'opt'+index" class="ml-4 text-sm text-slate-700 leading-snug">{{ item.text }}</label>
+                    <label :for="'opt'+index" class="ml-4 text-sm text-slate-700">{{ item.text }}</label>
                 </div>
-                <button onclick="window.print()" class="w-full mt-4 bg-slate-50 text-slate-500 p-3 rounded-xl font-bold text-[10px] uppercase border border-slate-200">
-                    🖨️ Generar PDF / Imprimir
+                <button onclick="window.print()" class="w-full bg-slate-100 text-slate-500 p-3 rounded-xl font-bold text-[10px] uppercase border border-slate-200">
+                    🖨️ Imprimir Plan
                 </button>
             </div>
         </div>
 
         <!-- PATADITAS -->
-        <div v-if="currentTab === 'kicks'" class="text-center space-y-6">
-            <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 text-slate-900">
-                <h2 class="text-xl font-bold uppercase tracking-tighter">Movimientos Fetales</h2>
-                <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Meta: 10 movimientos en 2h</p>
-                <div class="my-10 text-8xl font-black text-rose-500 tabular-nums">{{ kicks }}</div>
-                <button @click="addKick" class="w-36 h-36 bg-rose-500 text-white rounded-full text-2xl font-bold shadow-2xl shadow-rose-200 active:scale-90 transition-all border-8 border-rose-50">REGISTRAR</button>
-                <button @click="resetKicks" class="mt-10 block w-full text-[10px] text-slate-300 underline uppercase tracking-widest">Reiniciar sesión</button>
+        <div v-if="currentTab === 'kicks'" class="text-center">
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+                <h2 class="text-xl font-bold uppercase tracking-tighter">Movimientos</h2>
+                <div class="my-10 text-8xl font-black text-rose-500">{{ kicks }}</div>
+                <button @click="addKick" class="w-36 h-36 bg-rose-500 text-white rounded-full text-2xl font-bold shadow-xl border-8 border-rose-50">PATEÓ</button>
+                <button @click="resetKicks" class="mt-10 block w-full text-[10px] text-slate-300 underline uppercase tracking-widest text-slate-300">Reiniciar</button>
             </div>
         </div>
 
-        <!-- GIMNASIO (VIMEO OFICIAL) -->
-        <div v-if="currentTab === 'gym'" class="space-y-4">
-            <h2 class="font-bold text-xl text-slate-800 mb-4 px-2 uppercase">Gimnasio Prenatal 32+</h2>
-            
-            <div v-for="(ex, i) in vimeoExercises" :key="i" class="bg-white rounded-2
+    </main>
+
+    <!-- NAVBAR -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 flex justify-around p-4 shadow-2xl z-50">
+        <button v-for="tab in tabs" @click="currentTab = tab.id" :class="currentTab === tab.id ? 'text-rose-500 font-black' : 'text-slate-300 font-bold'" class="flex flex-col items-center">
+            <span class="text-[10px] uppercase tracking-tighter italic">{{ tab.name }}</span>
+        </button>
+    </nav>
+</div>
+
+<script>
+    const { createApp, ref } = Vue;
+    createApp({
+        setup() {
+            const currentTab = ref('home');
+            const kicks = ref(0);
+            const selectedHospital = ref('Pacifica Salud');
+            const tabs = [{id:'home', name:'Inicio'}, {id:'plan', name:'Plan'}, {id:'kicks', name:'Patadas'}, {id:'gym', name:'Gimnasio'}];
+            const hospitalLinks = { 'Pacifica Salud': 'https://waze.com/ul?q=Pacifica+Salud', 'The Panama Clinic': 'https://waze.com/ul?q=The+Panama+Clinic', 'Hospital Nacional': 'https://waze.com/ul?q=Hospital+Nacional' };
+            const birthPlanOptions = ref([ { text: 'Contacto piel con piel (Golden Hour)', checked: true }, { text: 'Corte tardío del cordón', checked: true }, { text: 'Lactancia exclusiva', checked: false } ]);
+            const addKick = () => { if (kicks.value < 10) kicks.value++; };
+            const resetKicks = () => { kicks.value = 0; };
+            return { currentTab, kicks, selectedHospital, hospitalLinks, birthPlanOptions, tabs, addKick, resetKicks };
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>
