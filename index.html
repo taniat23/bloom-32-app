@@ -19,7 +19,7 @@
     <main class="p-4 max-w-md mx-auto">
         
         <!-- INICIO & ALARMAS -->
-        <div v-if="currentTab === 'home'" class="space-y-4 animate-in fade-in">
+        <div v-if="currentTab === 'home'" class="space-y-4">
             <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-red-500">
                 <h2 class="text-red-600 font-bold text-lg mb-2 uppercase italic text-center">🚨 Signos de Alarma</h2>
                 <ul class="text-sm space-y-2 text-slate-700">
@@ -50,13 +50,12 @@
         <!-- PLAN DE PARTO -->
         <div v-if="currentTab === 'plan'" class="space-y-4">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <h2 class="font-bold text-xl mb-2 text-rose-600">Plan de Parto</h2>
-                <p class="text-[10px] text-slate-400 mb-6 uppercase tracking-widest">Sus preferencias para admisión:</p>
+                <h2 class="font-bold text-xl mb-2 text-rose-600 uppercase">Plan de Parto</h2>
                 <div v-for="(item, index) in birthPlanOptions" :key="index" class="flex items-center mb-5">
                     <input type="checkbox" :id="'opt'+index" class="w-6 h-6 accent-rose-500 rounded" v-model="item.checked">
                     <label :for="'opt'+index" class="ml-4 text-sm text-slate-700 leading-snug">{{ item.text }}</label>
                 </div>
-                <button onclick="window.print()" class="w-full mt-4 bg-slate-50 text-slate-500 p-3 rounded-xl font-bold text-[10px] uppercase border border-slate-200 active:bg-slate-100">
+                <button onclick="window.print()" class="w-full mt-4 bg-slate-50 text-slate-500 p-3 rounded-xl font-bold text-[10px] uppercase border border-slate-200">
                     🖨️ Generar PDF / Imprimir
                 </button>
             </div>
@@ -64,97 +63,17 @@
 
         <!-- PATADITAS -->
         <div v-if="currentTab === 'kicks'" class="text-center space-y-6">
-            <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-                <h2 class="text-xl font-bold text-slate-800">Control de Movimientos</h2>
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 text-slate-900">
+                <h2 class="text-xl font-bold uppercase tracking-tighter">Movimientos Fetales</h2>
                 <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Meta: 10 movimientos en 2h</p>
-                <div class="my-10 text-8xl font-black text-rose-500 tabular-nums tracking-tighter">{{ kicks }}</div>
+                <div class="my-10 text-8xl font-black text-rose-500 tabular-nums">{{ kicks }}</div>
                 <button @click="addKick" class="w-36 h-36 bg-rose-500 text-white rounded-full text-2xl font-bold shadow-2xl shadow-rose-200 active:scale-90 transition-all border-8 border-rose-50">REGISTRAR</button>
                 <button @click="resetKicks" class="mt-10 block w-full text-[10px] text-slate-300 underline uppercase tracking-widest">Reiniciar sesión</button>
             </div>
         </div>
 
-        <!-- GIMNASIO (SOLUCIÓN VIMEO - MÁS ESTABLE) -->
+        <!-- GIMNASIO (VIMEO OFICIAL) -->
         <div v-if="currentTab === 'gym'" class="space-y-4">
-            <h2 class="font-bold text-xl text-slate-800 mb-4 px-2">Gimnasio Prenatal 32+</h2>
+            <h2 class="font-bold text-xl text-slate-800 mb-4 px-2 uppercase">Gimnasio Prenatal 32+</h2>
             
-            <div v-for="(ex, i) in exercises" :key="i" class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="p-5">
-                    <h3 class="font-bold text-rose-500 text-base leading-tight">{{ ex.title }}</h3>
-                    <p class="text-xs text-slate-500 mt-2 mb-4 leading-relaxed">{{ ex.desc }}</p>
-                    <a :href="ex.video" target="_blank" class="w-full flex justify-center items-center text-[10px] font-black text-blue-600 bg-blue-50 py-4 rounded-xl border border-blue-100 uppercase tracking-widest active:bg-blue-100">
-                        🎬 Abrir Video (Vimeo)
-                    </a>
-                </div>
-            </div>
-            
-            <div class="mt-6 p-4 bg-slate-200/50 rounded-xl text-center">
-                <p class="text-[9px] text-slate-500 uppercase font-bold">Videos alojados en servidores externos para garantizar reproducción fluida en Panamá.</p>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- NAVBAR -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 flex justify-around p-4 shadow-2xl z-50">
-        <button v-for="tab in tabs" @click="currentTab = tab.id" :class="currentTab === tab.id ? 'text-rose-500 font-black' : 'text-slate-300 font-bold'" class="flex flex-col items-center">
-            <span class="text-[10px] uppercase tracking-tighter italic">{{ tab.name }}</span>
-        </button>
-    </nav>
-</div>
-
-<script>
-    const { createApp, ref } = Vue;
-    createApp({
-        setup() {
-            const currentTab = ref('home');
-            const kicks = ref(0);
-            const selectedHospital = ref('Pacifica Salud');
-            
-            const tabs = [
-                { id: 'home', name: 'Inicio' },
-                { id: 'plan', name: 'Plan' },
-                { id: 'kicks', name: 'Patadas' },
-                { id: 'gym', name: 'Gimnasio' }
-            ];
-
-            const hospitalLinks = {
-                'Pacifica Salud': 'https://waze.com/ul?q=Pacifica+Salud',
-                'The Panama Clinic': 'https://waze.com/ul?q=The+Panama+Clinic',
-                'Hospital Nacional': 'https://waze.com/ul?q=Hospital+Nacional'
-            };
-
-            const exercises = [
-                { 
-                    title: '1. Pelvic Tilts (Cat-Cow)', 
-                    desc: 'Movimiento fundamental para aliviar la espalda y mejorar la postura del bebé.',
-                    video: 'https://vimeo.com/225434434' 
-                },
-                { 
-                    title: '2. Sentadilla Prenatal', 
-                    desc: 'Fortalece las piernas y prepara la pelvis para el descenso fetal.',
-                    video: 'https://vimeo.com/393144893' 
-                },
-                { 
-                    title: '3. Movilidad de Hombros', 
-                    desc: 'Ideal para liberar la tensión del cuello tras el tráfico en la ciudad.',
-                    video: 'https://vimeo.com/256947477' 
-                }
-            ];
-
-            const birthPlanOptions = ref([
-                { text: 'Contacto piel con piel inmediato', checked: true },
-                { text: 'Corte tardío del cordón umbilical', checked: true },
-                { text: 'Lactancia materna exclusiva', checked: false },
-                { text: 'Libertad de movimiento en labor', checked: true },
-                { text: 'No ofrecer fórmulas ni chupones', checked: true }
-            ]);
-
-            const addKick = () => { if (kicks.value < 10) kicks.value++; };
-            const resetKicks = () => { kicks.value = 0; };
-
-            return { currentTab, kicks, selectedHospital, hospitalLinks, birthPlanOptions, exercises, tabs, addKick, resetKicks };
-        }
-    }).mount('#app');
-</script>
-</body>
-</html>
+            <div v-for="(ex, i) in vimeoExercises" :key="i" class="bg-white rounded-2
