@@ -18,8 +18,8 @@
 
     <main class="p-4 max-w-md mx-auto">
         
-        <!-- PESTAÑA INICIO -->
-        <div v-if="currentTab === 'home'" class="space-y-4 animate-in fade-in">
+        <!-- PESTAÑA 1: INICIO -->
+        <div v-if="currentTab === 'home'" class="space-y-4">
             <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-red-500">
                 <h2 class="text-red-600 font-bold text-lg mb-2 uppercase italic text-center">🚨 Signos de Alarma</h2>
                 <ul class="text-sm space-y-2 text-slate-700">
@@ -31,7 +31,7 @@
             </div>
             
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-                <h3 class="font-bold text-slate-800 mb-2 uppercase text-[10px]">Hospital de Entrega:</h3>
+                <h3 class="font-bold text-slate-800 mb-2 uppercase text-[10px]">Mi Hospital de Entrega:</h3>
                 <select v-model="selectedHospital" class="w-full p-3 bg-slate-50 border rounded-xl text-sm mb-3 outline-none">
                     <option value="Pacifica Salud">Pacífica Salud</option>
                     <option value="The Panama Clinic">The Panama Clinic</option>
@@ -47,38 +47,13 @@
             </a>
         </div>
 
-        <!-- PESTAÑA GIMNASIO (VIDEO DE CLOUDINARY) -->
-        <div v-if="currentTab === 'gym'" class="space-y-6">
-            <h2 class="font-bold text-xl text-slate-800 mb-2 px-2 uppercase tracking-tight text-center">Gimnasio Dra. Tania Herrera</h2>
-            
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                <!-- VIDEO PLAYER PROFESIONAL -->
-                <video 
-                    controls 
-                    playsinline 
-                    preload="auto" 
-                    class="w-full aspect-square bg-black shadow-inner"
-                >
-                    <source src="https://res.cloudinary.com/diwvfec5u/video/upload/v1772026626/cat-cow_aamevv.mp4" type="video/mp4">
-                    Su dispositivo no soporta la reproducción de video.
-                </video>
-                
-                <div class="p-6">
-                    <h3 class="font-bold text-rose-500 text-lg leading-tight uppercase italic">Cat-Cow Stretch</h3>
-                    <p class="text-xs text-slate-500 mt-2 leading-relaxed">
-                        Ejercicio fundamental para la movilidad espinal prenatal. Realice movimientos lentos y controlados siguiendo el ritmo de su respiración.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- PLAN DE PARTO -->
+        <!-- PESTAÑA 2: PLAN DE PARTO -->
         <div v-if="currentTab === 'plan'" class="space-y-4">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <h2 class="font-bold text-xl mb-2 text-rose-600 uppercase italic text-center">Plan de Parto</h2>
-                <p class="text-[10px] text-slate-400 mb-6 uppercase tracking-widest text-center">Seleccione sus preferencias:</p>
+                <h2 class="font-bold text-xl mb-2 text-rose-600 uppercase">Plan de Parto</h2>
+                <p class="text-[10px] text-slate-400 mb-6 uppercase tracking-widest">Sus preferencias para admisión:</p>
                 <div v-for="(item, index) in birthPlanOptions" :key="index" class="flex items-center mb-5">
-                    <input type="checkbox" :id="'opt'+index" class="w-6 h-6 accent-rose-500 rounded border-slate-300" v-model="item.checked">
+                    <input type="checkbox" :id="'opt'+index" class="w-6 h-6 accent-rose-500 rounded" v-model="item.checked">
                     <label :for="'opt'+index" class="ml-4 text-sm text-slate-700 leading-snug">{{ item.text }}</label>
                 </div>
                 <button onclick="window.print()" class="w-full mt-4 bg-slate-50 text-slate-500 p-3 rounded-xl font-bold text-[10px] uppercase border border-slate-200">
@@ -87,13 +62,38 @@
             </div>
         </div>
 
-        <!-- PATADITAS -->
+        <!-- PESTAÑA 3: PATADITAS (MÉTODO 1) -->
         <div v-if="currentTab === 'kicks'" class="text-center space-y-6">
             <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
                 <h2 class="text-xl font-bold uppercase tracking-tighter">Movimientos Fetales</h2>
-                <div class="my-10 text-8xl font-black text-rose-500 tabular-nums tracking-tighter">{{ kicks }}</div>
-                <button @click="addKick" class="w-36 h-36 bg-rose-500 text-white rounded-full text-2xl font-bold shadow-2xl shadow-rose-200 active:scale-90 transition-all border-8 border-rose-50 uppercase tracking-tighter">PATEÓ</button>
-                <button @click="resetKicks" class="mt-10 block w-full text-[10px] text-slate-300 underline uppercase tracking-widest">Reiniciar sesión</button>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Meta: 10 movimientos en 2h</p>
+                <div class="my-10 text-8xl font-black text-rose-500 tabular-nums">{{ kicks }}</div>
+                <button @click="addKick" class="w-36 h-36 bg-rose-500 text-white rounded-full text-2xl font-bold shadow-2xl shadow-rose-200 active:scale-90 transition-all border-8 border-rose-50">REGISTRAR</button>
+                <button @click="resetKicks" class="mt-10 block w-full text-[10px] text-slate-300 underline uppercase tracking-widest text-slate-300">Reiniciar sesión</button>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 4: GIMNASIO (SIN VIDEOS INTERNOS - SOLO TEXTO) -->
+        <div v-if="currentTab === 'gym'" class="space-y-4">
+            <h2 class="font-bold text-xl text-slate-800 px-2 uppercase italic">Gimnasio 32+</h2>
+            
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="font-bold text-rose-500 text-base">1. Cat-Cow Stretch</h3>
+                <p class="text-xs text-slate-700 mt-2 leading-relaxed">Realice movimientos lentos en 4 puntos para aliviar su espalda.</p>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="font-bold text-rose-500 text-base">2. Sentadilla Prenatal</h3>
+                <p class="text-xs text-slate-700 mt-2 leading-relaxed">Ayuda a la apertura pélvica. Use una silla firme como apoyo.</p>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="font-bold text-rose-500 text-base">3. Movilidad de Cuello</h3>
+                <p class="text-xs text-slate-700 mt-2 leading-relaxed">Ideal para realizar durante el tráfico de la ciudad para liberar tensión.</p>
+            </div>
+
+            <div class="mt-4 p-4 bg-blue-50 rounded-xl text-center border border-blue-100">
+                <p class="text-[10px] text-blue-700 font-bold uppercase italic">Los videos han sido removidos para garantizar la estabilidad de la App.</p>
             </div>
         </div>
 
@@ -102,7 +102,7 @@
     <!-- NAVEGACIÓN -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 flex justify-around p-4 shadow-2xl z-50">
         <button v-for="tab in tabs" @click="currentTab = tab.id" :class="currentTab === tab.id ? 'text-rose-500 font-black' : 'text-slate-300 font-bold'" class="flex flex-col items-center">
-            <span class="text-[10px] uppercase tracking-tighter">{{ tab.name }}</span>
+            <span class="text-[10px] uppercase tracking-tighter italic">{{ tab.name }}</span>
         </button>
     </nav>
 </div>
@@ -114,8 +114,20 @@
             const currentTab = ref('home');
             const kicks = ref(0);
             const selectedHospital = ref('Pacifica Salud');
-            const tabs = [{id:'home', name:'Inicio'}, {id:'plan', name:'Plan'}, {id:'kicks', name:'Patadas'}, {id:'gym', name:'Gimnasio'}];
-            const hospitalLinks = { 'Pacifica Salud': 'https://waze.com/ul?q=Pacifica+Salud', 'The Panama Clinic': 'https://waze.com/ul?q=The+Panama+Clinic', 'Hospital Nacional': 'https://waze.com/ul?q=Hospital+Nacional' };
+            
+            const tabs = [
+                { id: 'home', name: 'Inicio' },
+                { id: 'plan', name: 'Plan' },
+                { id: 'kicks', name: 'Patadas' },
+                { id: 'gym', name: 'Gimnasio' }
+            ];
+
+            const hospitalLinks = {
+                'Pacifica Salud': 'https://waze.com/ul?q=Pacifica+Salud',
+                'The Panama Clinic': 'https://waze.com/ul?q=The+Panama+Clinic',
+                'Hospital Nacional': 'https://waze.com/ul?q=Hospital+Nacional'
+            };
+
             const birthPlanOptions = ref([
                 { text: 'Contacto piel con piel (Golden Hour)', checked: true },
                 { text: 'Corte tardío del cordón umbilical', checked: true },
@@ -123,9 +135,13 @@
                 { text: 'Libertad de movimiento durante labor', checked: true },
                 { text: 'No ofrecer fórmulas ni chupones', checked: true }
             ]);
+
             const addKick = () => { if (kicks.value < 10) kicks.value++; };
             const resetKicks = () => { kicks.value = 0; };
+
             return { currentTab, kicks, selectedHospital, hospitalLinks, birthPlanOptions, tabs, addKick, resetKicks };
         }
     }).mount('#app');
-</s
+</script>
+</body>
+</html>
